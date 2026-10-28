@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toán lớp 4 — Khảo sát tháng 10</title>
+<style>
+:root{
+  --sky:#eaf6ff;--sun:#ffc93c;--sun-deep:#ffab00;--coral:#ff6b6b;--coral-deep:#e8523f;
+  --leaf:#3fb083;--leaf-deep:#1d7a52;--plum:#6f5fa3;--ink:#2d3142;--ink-soft:#5a5f75;
+  --paper:#fff;--radius:20px;--shadow:0 8px 22px rgba(45,49,66,.10);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;font-family:"Baloo 2","Quicksand","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+  color:var(--ink);min-height:100vh;padding-bottom:70px;
+  background:radial-gradient(circle at 10% 6%,#fff6da 0,transparent 45%),radial-gradient(circle at 92% 3%,#ffe1e1 0,transparent 40%),linear-gradient(180deg,var(--sky),#f5fbff 60%,#fdf9ef);
+}
+.snd{position:fixed;top:10px;right:10px;z-index:50;width:46px;height:46px;border-radius:50%;border:2px solid #ffe2a8;background:#fff;font-size:22px;box-shadow:var(--shadow);cursor:pointer}
+.hero{padding:34px 16px 6px;text-align:center}
+.badge{display:inline-block;background:#fff;border:2px dashed var(--sun-deep);color:var(--coral-deep);font-weight:700;font-size:13px;padding:5px 14px;border-radius:999px;margin-bottom:10px}
+.hero h1{font-size:clamp(26px,7vw,40px);margin:0 0 6px;line-height:1.15}
+.hero h1 span{color:var(--coral-deep)}
+.hero p{max-width:480px;margin:0 auto;color:var(--ink-soft);font-weight:600;font-size:15px}
+.card{max-width:640px;margin:18px auto 0;background:var(--paper);border-radius:18px;box-shadow:var(--shadow);padding:16px 18px;border:2px solid #ffe2a8}
+.card label{display:block;font-weight:700;font-size:14px;color:var(--plum);margin-bottom:4px}
+.card input[type=text],.card select{width:100%;border:2px solid #eaeff6;border-radius:12px;padding:12px;font:inherit;font-weight:700;font-size:17px;color:var(--ink);background:#fff;margin-bottom:10px}
+.card input:focus,.card select:focus{outline:none;border-color:var(--sun-deep)}
+.card input[readonly]{background:#f3f6fa;color:var(--ink-soft)}
+.card .last{margin-bottom:0}
+.hidden{display:none!important}
+.progress-wrap{max-width:640px;margin:20px auto 0;padding:0 16px}
+.plabel{display:flex;justify-content:space-between;font-weight:700;color:var(--ink-soft);font-size:14px;margin-bottom:6px}
+#pcount{color:var(--coral-deep);font-size:16px}
+.track{position:relative;height:30px;border-radius:999px;background:#e3ecf4;border:2px solid #d5e0ec;overflow:hidden}
+.fill{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,var(--sun),var(--coral));border-radius:999px;transition:width .4s}
+.walker{position:absolute;top:50%;left:0;transform:translate(-50%,-50%);font-size:18px;transition:left .4s}
+.wrap{max-width:640px;margin:20px auto 0;padding:0 16px;display:flex;flex-direction:column;gap:18px}
+.q{background:var(--paper);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 16px 18px;border:3px solid transparent;transition:border-color .2s,background .2s}
+.q.ok{border-color:var(--leaf);background:#f2fbf7}
+.q.no{border-color:var(--coral);background:#fff5f4}
+.qlab{display:inline-block;background:var(--sun);color:#7a4b00;font-weight:800;font-size:15px;padding:3px 14px;border-radius:999px;margin-bottom:10px}
+.qt{font-weight:700;font-size:17px;line-height:1.5;margin:0 0 12px}
+.qt sup,.opt sup{font-size:.65em}
+.fig{margin:0 0 14px;text-align:center}
+.fig svg{max-width:100%;height:auto}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:13px 14px;border-radius:14px;border:2px solid #e3e9f2;background:#f7f9fc;font:inherit;font-weight:700;font-size:17px;color:var(--ink);cursor:pointer;min-height:52px}
+.opt .ltr{flex:none;width:32px;height:32px;border-radius:50%;background:#fff;border:2px solid #cfd8e6;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
+.opt:not(:disabled):active{transform:scale(.98)}
+.opt:not(:disabled):hover{background:#eef4ff;border-color:#c3d6ff}
+.opt:disabled{cursor:default}
+.opt.right{background:#dcf5e9;border-color:var(--leaf)}
+.opt.right .ltr{background:var(--leaf);border-color:var(--leaf);color:#fff}
+.opt.wrong{background:#ffe1de;border-color:var(--coral)}
+.opt.wrong .ltr{background:var(--coral);border-color:var(--coral);color:#fff}
+.fb{display:none;margin-top:12px;padding:12px 14px;border-radius:14px;font-weight:600;font-size:15px;line-height:1.55}
+.q.ok .fb{display:block;background:#e4f7ee;color:var(--leaf-deep)}
+.q.no .fb{display:block;background:#ffe9e6;color:#a8321f}
+.fb b{display:block;font-size:17px;margin-bottom:2px}
+.grid18{display:inline-grid;grid-template-columns:repeat(5,1fr);border:2px solid #333;background:#fff;margin:0 auto}
+.grid18 div{width:clamp(44px,13vw,58px);height:clamp(44px,13vw,58px);border:1px solid #333;display:flex;align-items:center;justify-content:center;font-size:clamp(24px,7vw,32px)}
+.grid18 .qm{color:#1f9d55;font-weight:800}
+.big{font-size:30px;line-height:1}
+.submit{position:sticky;bottom:12px;display:flex;justify-content:center;z-index:20}
+.btn{border:none;border-radius:999px;font:inherit;font-weight:800;cursor:pointer}
+.btn-go{background:linear-gradient(135deg,var(--coral),var(--coral-deep));color:#fff;padding:15px 38px;font-size:20px;box-shadow:0 10px 22px rgba(232,82,63,.35)}
+.btn-go:disabled{opacity:.6}
+.btn-again{background:var(--plum);color:#fff;padding:12px 28px;font-size:17px;margin-top:6px}
+.result{display:none;background:linear-gradient(160deg,#fff,#fef8ee);border-radius:var(--radius);box-shadow:var(--shadow);padding:26px 18px;text-align:center;border-top:6px solid var(--leaf)}
+.result.show{display:block}
+.remoji{font-size:50px}
+.rscore{font-size:44px;font-weight:800;color:var(--coral-deep);margin:2px 0}
+.rmsg{font-weight:700;font-size:17px;margin-bottom:8px}
+.rsend{font-weight:700;font-size:14px;color:var(--ink-soft);margin-bottom:10px}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden}
+.confetti i{position:absolute;top:-20px;font-style:normal;font-size:22px;animation:fall 1.4s ease-in forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(360deg);opacity:.8}}
+footer{text-align:center;color:var(--ink-soft);font-size:12.5px;margin-top:24px;font-weight:600}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<button class="snd" id="sndBtn" aria-label="Bật hoặc tắt âm thanh" title="Bật/tắt âm thanh">🔊</button>
+
+<div class="hero">
+  <span class="badge">TOÁN · LỚP 4 · KHẢO SÁT THÁNG 10</span>
+  <h1>Đề <span>khảo sát tháng 10</span></h1>
+  <p>Con làm từng câu nhé. Chạm vào đáp án, máy sẽ báo đúng hay sai ngay. Chúc con làm bài thật tốt!</p>
+</div>
+
+<div class="card">
+  <div id="nameBox">
+    <label for="nameInput" id="nameLabel">✏️ Họ và tên của con là gì?</label>
+    <input type="text" id="nameInput" placeholder="Nhập họ và tên của em..." autocomplete="off">
+  </div>
+  <div id="rosterBox" class="hidden">
+    <label for="rosterSel">✏️ Con chọn tên của mình nhé</label>
+    <select id="rosterSel"></select>
+    <input type="text" id="otherName" class="hidden" placeholder="Nhập họ và tên của em..." autocomplete="off">
+  </div>
+  <label for="classInput">🏫 Con học lớp mấy?</label>
+  <input type="text" id="classInput" class="last" placeholder="VD: 4A" autocomplete="off">
+</div>
+
+<div class="progress-wrap">
+  <div class="plabel"><span>Đường đi của em</span><span id="pcount">0 / 20 câu</span></div>
+  <div class="track"><div class="fill" id="pfill"></div><div class="walker" id="pwalk">🚶</div></div>
+</div>
+
+<div class="wrap" id="qwrap"></div>
+
+<div class="wrap">
+  <div class="submit"><button class="btn btn-go" id="submitBtn">🎉 Nộp bài</button></div>
+  <div class="result" id="result">
+    <div class="remoji" id="remoji">🌤️</div>
+    <div class="rscore" id="rscore">0 / 20 điểm</div>
+    <div class="rmsg" id="rmsg"></div>
+    <div class="rsend" id="rsend"></div>
+    <button class="btn btn-again" id="againBtn">↺ Làm lại từ đầu</button>
+  </div>
+</div>
+
+<footer>Toán lớp 4 · Khảo sát tháng 10 · Chúc em học vui! 🌈</footer>
+
+<script>
+const GAS_URL='https://script.google.com/macros/s/AKfycby_OmwTYAGJ5BdCL-u2lTPFqYsBMLqLtmeFUTeQYF52w0Nk-H0KlrvoWjINA5K0js1lIw/exec';
+const LOP_LINK=new URLSearchParams(location.search).get('lop')||'';
+const BAI='Khảo sát tháng 10';
+
+//#PURE-START
+const Q=[
+{n:'1',t:'Trong các số: 42 078, 42 075, 42 090, 42 100, 42 099, 42 109, 43 000. Số lớn nhất là:',o:['42 099','43 000','42 075','42 090'],a:1,e:'Sắp xếp: 42 075 &lt; 42 078 &lt; 42 090 &lt; 42 099 &lt; 42 100 &lt; 42 109 &lt; 43 000. Vậy số lớn nhất là 43 000.'},
+{n:'2',t:'Giá trị của biểu thức 1342 + 403 × 6 là:',o:['3760','3860','2760','3342'],a:0,e:'Nhân trước, cộng sau: 1342 + 403 × 6 = 1342 + 2418 = 3760.'},
+{n:'3',t:'Hình vuông có cạnh 4 cm. Diện tích hình vuông là:',o:['8 cm<sup>2</sup>','20 cm<sup>2</sup>','16 cm<sup>2</sup>','16 cm'],a:2,e:'Diện tích hình vuông là: 4 × 4 = 16 (cm<sup>2</sup>).'},
+{n:'4',t:'Nhà sách bán 1 quyển vở với giá 16 000 đồng. Bạn An đã mua 5 quyển vở như vậy. Hỏi An phải trả cho nhà sách bao nhiêu tiền?',o:['60 000 đồng','65 000 đồng','70 000 đồng','80 000 đồng'],a:3,e:'An phải trả: 16 000 × 5 = 80 000 (đồng).'},
+{n:'5',t:'Ngày 25 tháng 8 là ngày thứ Bảy. Ngày 2 tháng 9 cùng năm đó là ngày thứ:',o:['Thứ Bảy','Chủ Nhật','Thứ Hai','Thứ Ba'],a:1,e:'Từ ngày 25 tháng 8 đến ngày 2 tháng 9 là 8 ngày (6 ngày đến hết tháng 8, thêm 2 ngày). 8 ngày = 1 tuần + 1 ngày, nên sau thứ Bảy một ngày là Chủ Nhật.'},
+{n:'6',t:'Một đội công nhân sửa đường, ngày thứ nhất sửa được 96 m, ngày thứ nhất sửa được bằng <sup>1</sup>&frasl;<sub>6</sub> ngày thứ hai. Hỏi cả hai ngày, đội đó sửa được bao nhiêu mét?',o:['600 m','670 m','575 m','672 m'],a:3,e:'Ngày thứ hai sửa được: 96 × 6 = 576 (m). Cả hai ngày sửa được: 576 + 96 = 672 (m).'},
+{n:'7',t:'Chu vi của hình vuông có cạnh 4 dm 3 cm là:',o:['152 cm','162 cm','172 cm','182 cm'],a:2,e:'Đổi 4 dm 3 cm = 43 cm. Chu vi hình vuông là: 43 × 4 = 172 (cm).'},
+{n:'8',t:'Một thửa ruộng hình chữ nhật có chiều rộng 7 cm, chiều dài gấp 3 lần chiều rộng. Tính diện tích thửa ruộng hình chữ nhật đó.',o:['230 cm<sup>2</sup>','247 cm<sup>2</sup>','152 cm<sup>2</sup>','147 cm<sup>2</sup>'],a:3,e:'Chiều dài là: 7 × 3 = 21 (cm). Diện tích là: 21 × 7 = 147 (cm<sup>2</sup>).'},
+{n:'9',t:'Tính chu vi hình chữ nhật ABCD với các kích thước như hình vẽ:',fig:'rect',o:['28 m','28 dm','28 cm','280 dm'],a:1,e:'Đổi 90 cm = 9 dm. Chu vi hình chữ nhật ABCD là: (5 + 9) × 2 = 28 (dm).'},
+{n:'10',t:'Một ô tô đi trong 3 giờ thì được 420 km. Hỏi ô tô đó đi trong 8 giờ được bao nhiêu ki-lô-mét?',o:['1120 km','1220 km','1320 km','1380 km'],a:0,e:'Một giờ ô tô đi được: 420 : 3 = 140 (km). 8 giờ ô tô đi được: 140 × 8 = 1120 (km).'},
+{n:'11',t:'Bạn Hoàng đặt 6 que diêm lên mặt bàn sao cho mỗi que diêm cách nhau 10 cm. Hỏi que diêm thứ 6 cách que diêm thứ nhất bao xa?',o:['60 cm','6 cm','50 dm','5 dm'],a:3,e:'Giữa 6 que diêm có 5 khoảng cách. Que thứ sáu cách que thứ nhất: 5 × 10 = 50 (cm) = 5 dm.'},
+{n:'12',t:'Tích của hai số là 354. Nếu thừa số thứ nhất tăng lên 3 lần, thừa số thứ hai tăng lên 2 lần thì tích mới là bao nhiêu?',o:['3412','2124','2142','3543'],a:1,e:'Tích tăng lên: 3 × 2 = 6 (lần). Tích mới là: 354 × 6 = 2124.'},
+{n:'13',t:'Từ ba chữ số 6, 7, 9 ta lập được một số có ba chữ số khác nhau là A. Từ hai số 5, 8 ta lập được một số có hai chữ số khác nhau là B. Biết rằng hiệu giữa A và B là 891. Tìm hai số đó.',o:['976 và 58','967 và 58','967 và 85','976 và 85'],a:3,e:'B là 58 hoặc 85. Thử: 976 − 58 = 918 (loại); 967 − 58 = 909 (loại); 967 − 85 = 882 (loại); 976 − 85 = 891 (chọn). Vậy A = 976 và B = 85.'},
+{n:'14',t:'Trong túi có ba loại bi: bi đỏ, bi vàng và bi xanh. Biết rằng số bi của cả túi nhiều hơn tổng số bi vàng và bi đỏ là 15 viên, số bi xanh ít hơn số bi vàng là 3 viên và nhiều hơn bi đỏ là 4 viên. Hỏi trong túi có bao nhiêu viên bi?',o:['24 viên bi','34 viên bi','44 viên bi','55 viên bi'],a:2,e:'Số bi xanh là 15 viên. Số bi vàng: 15 + 3 = 18 (viên). Số bi đỏ: 15 − 4 = 11 (viên). Cả túi có: 15 + 18 + 11 = 44 (viên bi).'},
+{n:'15',t:'Người ta sắp xếp các số tự nhiên theo quy tắc như sau:',fig:'tri',tail:'Số 30 thuộc hàng thứ mấy?',o:['30','12','10','8'],a:3,e:'Số cuối cùng của hàng thứ n bằng 1 + 2 + … + n. Hàng 7 kết thúc ở số 1 + 2 + 3 + 4 + 5 + 6 + 7 = 28, nên hàng 8 gồm các số từ 29 đến 36. Vậy số 30 thuộc hàng 8.'},
+{n:'16',t:'Đoạn đường từ nhà Huy đến trường dài 500 m. Người ta trồng cây ở một bên đường của đoạn đường đó. Biết khoảng cách giữa các cây là 2 m và ở ngay chỗ nhà Huy có trồng cây còn ở trường thì không có cây trồng. Tính số cây đã trồng trên đoạn đường đó.',o:['500 cây','200 cây','250 cây','210 cây'],a:2,e:'Số khoảng cách là: 500 : 2 = 250 (khoảng). Vì chỉ có một đầu trồng cây nên số cây bằng số khoảng cách, vậy có 250 cây.'},
+{n:'17',t:'Hiện nay, tổng số tuổi của ba người là 40 tuổi. Hỏi sau bao nhiêu năm nữa thì tổng số tuổi của ba người là 58 tuổi?',o:['6 năm','7 năm','8 năm','9 năm'],a:0,e:'Mỗi năm, mỗi người tăng thêm 1 tuổi nên tổng số tuổi của ba người tăng 3 tuổi. Số năm cần tìm là: (58 − 40) : 3 = 6 (năm).'},
+{n:'18',t:'Trong hình vẽ dưới đây, mỗi con vật, bông hoa đều xuất hiện đầy đủ và duy nhất trong bảng sau. Tìm hình còn thiếu vào dấu ?',fig:'grid',o:['🐯 Con hổ','🦈 Con cá mập','🐼 Con gấu trúc','🐷 Con heo'],a:3,e:'Mỗi hàng, mỗi cột đều có đủ 5 hình khác nhau. Hình cần điền là con heo.'},
+{n:'19',t:'Minh, Tuấn, Lan và Ngọc đang ngồi trong một hàng gồm 4 chiếc ghế. Dũng đứng ngoài hàng quan sát rồi nói: “Tuấn ở bên cạnh Lan”, “Minh ngồi giữa Tuấn và Lan”. Tuy nhiên tất cả những lời nói của Dũng đều sai. Biết rằng Tuấn đang ngồi ở vị trí thứ ba. Hỏi ai đang ngồi ở vị trí thứ hai?',o:['Minh','Tuấn','Lan','Ngọc'],a:3,e:'Câu “Tuấn ở bên cạnh Lan” sai nên Lan không ngồi ở vị trí 2 hoặc 4, vậy Lan ngồi ở vị trí 1. Câu “Minh ngồi giữa Tuấn và Lan” sai nên Minh không ngồi ở vị trí 2, vậy Minh ngồi ở vị trí 4. Thứ tự là: Lan – Ngọc – Tuấn – Minh. Ngọc ngồi ở vị trí thứ hai.'},
+{n:'20',t:'Zack và Jack đang đứng thành một hàng và có 3 người giữa họ (Zack trước Jack). Nếu Zack di chuyển xuống 5 người và Jack vượt lên 4 người, số người đứng sau Zack sẽ bằng số người đứng trước Jack và bằng 2. Có bao nhiêu người trong hàng?',o:['20','10','14','16'],a:1,e:'Sau khi Jack vượt lên 4 người thì trước Jack còn 2 người, nên lúc đầu trước Jack có 4 + 2 = 6 người, Jack đứng thứ 7. Zack đứng trước Jack (có 3 người ở giữa) nên Zack đứng thứ 3. Sau khi Zack xuống 5 người thì sau Zack còn 2 người, nên lúc đầu sau Zack có 5 + 2 = 7 người. Cả hàng có: 3 + 7 = 10 (người).'}
+];
+function computeResult(choices){
+  let earned=0;const wrong=[];
+  Q.forEach((q,i)=>{ if(choices[i]===q.a) earned++; else wrong.push('Câu '+q.n); });
+  return {earned:earned,total:Q.length,wrong:wrong};
+}
+//#PURE-END
+
+const FIG={
+rect:'<svg viewBox="0 0 300 170" width="300" role="img" aria-label="Hình chữ nhật ABCD, cạnh AC dài 90 cm, cạnh AB dài 5 dm"><rect x="50" y="35" width="200" height="100" fill="#fffdf4" stroke="#2d3142" stroke-width="2"/><g fill="#2f7fe0"><circle cx="50" cy="35" r="5"/><circle cx="250" cy="35" r="5"/><circle cx="50" cy="135" r="5"/><circle cx="250" cy="135" r="5"/></g><g font-family="sans-serif" font-size="15" font-weight="700" fill="#2d3142"><text x="38" y="28">A</text><text x="254" y="28">C</text><text x="38" y="156">B</text><text x="254" y="156">D</text><text x="132" y="26">90 cm</text><text x="8" y="90">5 dm</text></g></svg>',
+tri:'<div style="display:inline-block;text-align:center;font-weight:800;font-size:22px;line-height:1.5;letter-spacing:6px;background:#fffdf4;border:2px dashed #ffdb9b;border-radius:14px;padding:8px 22px"><div>1</div><div>2 3</div><div>4 5 6</div><div>7 8 9 10</div></div>',
+grid:'<div class="grid18" aria-label="Bảng 5 hàng 5 cột các con vật và bông hoa"><div>🦈</div><div>🐼</div><div>🐷</div><div>🌸</div><div>🐯</div><div>🌸</div><div>🐯</div><div></div><div></div><div>🐷</div><div>🐼</div><div>🐷</div><div>🌸</div><div></div><div>🦈</div><div>🐯</div><div>🦈</div><div></div><div class="qm">?</div><div>🌸</div><div>🐷</div><div>🌸</div><div>🐯</div><div>🦈</div><div>🐼</div></div>'
+};
+
+const PRAISE=['Giỏi quá!','Chính xác!','Tuyệt vời!','Con làm tốt lắm!','Hay lắm!','Đúng rồi, cố lên nào!'];
+const COMFORT=['Đừng lo, con xem lại nhé.','Không sao, lần sau con sẽ làm được.','Cố gắng lên con nhé!','Xem đáp án rồi nhớ cách làm nhé.'];
+const LET=['A','B','C','D'];
+
+const choices=Q.map(()=>null);
+let soundOn=true,actx=null,submitted=false;
+
+// ---------- âm thanh ----------
+function ctx(){
+  try{ if(!actx){ actx=new (window.AudioContext||window.webkitAudioContext)(); } if(actx.state==='suspended') actx.resume(); }catch(e){ actx=null; }
+  return actx;
+}
+function tone(freq,start,dur,type,vol){
+  const c=ctx(); if(!c) return;
+  const o=c.createOscillator(),g=c.createGain();
+  o.type=type; o.frequency.value=freq;
+  const t=c.currentTime+start;
+  g.gain.setValueAtTime(0.0001,t);
+  g.gain.exponentialRampToValueAtTime(vol,t+0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+  o.connect(g); g.connect(c.destination);
+  o.start(t); o.stop(t+dur+0.05);
+}
+function playRight(){ if(!soundOn) return; tone(988,0,0.18,'sine',0.25); tone(1319,0.14,0.3,'sine',0.25); }
+function playWrong(){ if(!soundOn) return; tone(247,0,0.22,'triangle',0.22); tone(196,0.16,0.3,'triangle',0.2); }
+document.getElementById('sndBtn').addEventListener('click',function(){
+  soundOn=!soundOn; this.textContent=soundOn?'🔊':'🔇';
+  if(soundOn){ tone(660,0,0.12,'sine',0.15); }
+});
+
+function burst(){
+  const box=document.createElement('div'); box.className='confetti';
+  const em=['🎉','⭐','🌟','✨','🎈'];
+  for(let i=0;i<22;i++){
+    const s=document.createElement('i'); s.textContent=em[i%em.length];
+    s.style.left=(Math.random()*100)+'%'; s.style.animationDelay=(Math.random()*0.5)+'s';
+    box.appendChild(s);
+  }
+  document.body.appendChild(box); setTimeout(()=>box.remove(),2200);
+}
+
+// ---------- dựng câu hỏi ----------
+const qwrap=document.getElementById('qwrap');
+Q.forEach((q,i)=>{
+  const d=document.createElement('div'); d.className='q'; d.id='q'+i;
+  let h='<span class="qlab">Câu '+q.n+'</span><p class="qt">'+q.t+'</p>';
+  if(q.fig) h+='<div class="fig">'+FIG[q.fig]+'</div>';
+  if(q.tail) h+='<p class="qt">'+q.tail+'</p>';
+  h+='<div class="opts">';
+  q.o.forEach((o,k)=>{ h+='<button type="button" class="opt" data-i="'+i+'" data-k="'+k+'"><span class="ltr">'+LET[k]+'</span><span>'+o+'</span></button>'; });
+  h+='</div><div class="fb" id="fb'+i+'"></div>';
+  d.innerHTML=h; qwrap.appendChild(d);
+});
+qwrap.addEventListener('click',function(ev){
+  const b=ev.target.closest('.opt'); if(!b||b.disabled) return;
+  grade(+b.dataset.i,+b.dataset.k,false);
+});
+
+function grade(i,k,silent){
+  if(choices[i]!==null) return;
+  choices[i]=k;
+  const q=Q[i],card=document.getElementById('q'+i),ok=(k===q.a);
+  card.querySelectorAll('.opt').forEach((b,idx)=>{
+    b.disabled=true;
+    if(idx===q.a) b.classList.add('right');
+    else if(idx===k) b.classList.add('wrong');
+  });
+  card.classList.add(ok?'ok':'no');
+  const fb=document.getElementById('fb'+i);
+  const ansTxt=LET[q.a]+'. '+q.o[q.a];
+  if(ok){
+    fb.innerHTML='<b>✅ Đúng rồi! '+PRAISE[i%PRAISE.length]+'</b>'+q.e;
+  }else if(k===-1){
+    fb.innerHTML='<b>Chưa có câu trả lời</b>Đáp án đúng là: <b style="display:inline">'+ansTxt+'</b>.<br>'+q.e;
+  }else{
+    fb.innerHTML='<b>Chưa đúng. '+COMFORT[i%COMFORT.length]+'</b>Đáp án đúng là: <b style="display:inline">'+ansTxt+'</b>.<br>'+q.e;
+  }
+  if(!silent){ ok?playRight():playWrong(); }
+  updateProgress();
+}
+
+function updateProgress(){
+  const n=choices.filter(c=>c!==null).length,pct=Math.round(n/Q.length*100);
+  document.getElementById('pfill').style.width=pct+'%';
+  document.getElementById('pwalk').style.left=Math.min(Math.max(pct,3),97)+'%';
+  document.getElementById('pcount').textContent=n+' / '+Q.length+' câu';
+}
+
+// ---------- họ tên, lớp ----------
+const nameInput=document.getElementById('nameInput');
+const classInput=document.getElementById('classInput');
+const rosterBox=document.getElementById('rosterBox');
+const rosterSel=document.getElementById('rosterSel');
+const otherName=document.getElementById('otherName');
+
+function getName(){
+  if(!rosterBox.classList.contains('hidden')){
+    if(rosterSel.value==='__other__') return otherName.value.trim();
+    return rosterSel.value.trim();
+  }
+  return nameInput.value.trim();
+}
+if(LOP_LINK){
+  classInput.value=LOP_LINK; classInput.readOnly=true;
+  const ctl=(typeof AbortController!=='undefined')?new AbortController():null;
+  const timer=setTimeout(()=>{ if(ctl) ctl.abort(); },5000);
+  fetch(GAS_URL+'?action=roster&lop='+encodeURIComponent(LOP_LINK),ctl?{signal:ctl.signal}:{})
+    .then(r=>r.json())
+    .then(d=>{
+      clearTimeout(timer);
+      if(d&&d.ok&&d.names&&d.names.length){
+        rosterSel.innerHTML='<option value="">— Chọn tên của con —</option>';
+        d.names.forEach(nm=>{ const o=document.createElement('option'); o.value=nm; o.textContent=nm; rosterSel.appendChild(o); });
+        const ot=document.createElement('option'); ot.value='__other__'; ot.textContent='Tên con không có trong danh sách'; rosterSel.appendChild(ot);
+        document.getElementById('nameBox').classList.add('hidden');
+        rosterBox.classList.remove('hidden');
+      }
+    })
+    .catch(()=>{ clearTimeout(timer); });
+}
+rosterSel.addEventListener('change',()=>{
+  otherName.classList.toggle('hidden',rosterSel.value!=='__other__');
+  rosterSel.style.borderColor='';
+  if(rosterSel.value==='__other__') otherName.focus();
+});
+
+// ---------- nộp bài ----------
+document.getElementById('submitBtn').addEventListener('click',function(){
+  const name=getName(),lop=classInput.value.trim();
+  const nameField=rosterBox.classList.contains('hidden')?nameInput:(rosterSel.value==='__other__'?otherName:rosterSel);
+  if(name===''){
+    nameField.style.borderColor='var(--coral)';
+    if(nameField.placeholder!==undefined&&nameField.tagName==='INPUT') nameField.placeholder='Em nhớ điền tên trước khi nộp bài nhé!';
+    nameField.scrollIntoView({behavior:'smooth',block:'center'}); nameField.focus(); return;
+  }
+  nameField.style.borderColor='';
+  if(lop===''){
+    classInput.style.borderColor='var(--coral)'; classInput.placeholder='Em nhớ điền lớp trước khi nộp bài nhé!';
+    classInput.scrollIntoView({behavior:'smooth',block:'center'}); classInput.focus(); return;
+  }
+  classInput.style.borderColor='';
+  if(submitted) return;
+  submitted=true; this.disabled=true;
+
+  Q.forEach((q,i)=>{ if(choices[i]===null) grade(i,-1,true); });
+  const r=computeResult(choices);
+
+  const payload={bai:BAI,hoten:name,lop:lop,loplink:LOP_LINK,diem:r.earned,tongdiem:r.total,causai:r.wrong.join(', ')};
+  const sendEl=document.getElementById('rsend');
+  sendEl.textContent='Đang gửi bài cho cô...';
+  try{
+    fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)})
+      .then(()=>{ sendEl.textContent='✅ Bài làm của con đã được gửi cho cô.'; })
+      .catch(()=>{ sendEl.textContent='⚠️ Chưa gửi được bài. Con báo cô hoặc người lớn kiểm tra mạng nhé.'; });
+  }catch(e){ sendEl.textContent='⚠️ Chưa gửi được bài. Con báo cô hoặc người lớn kiểm tra mạng nhé.'; }
+
+  const pct=Math.round(r.earned/r.total*100);
+  let em,msg;
+  if(pct>=90){em='🌞';msg='Tuyệt vời! Con làm bài rất giỏi!';}
+  else if(pct>=70){em='🌤️';msg='Rất tốt! Con đã làm đúng nhiều câu rồi.';}
+  else if(pct>=50){em='⛅';msg='Khá lắm! Con xem lại vài câu để giỏi hơn nữa nhé.';}
+  else{em='🌫️';msg='Đừng lo, con xem lại các đáp án rồi thử lại nhé!';}
+  document.getElementById('remoji').textContent=em;
+  document.getElementById('rscore').textContent=r.earned+' / '+r.total+' điểm';
+  document.getElementById('rmsg').textContent=name+' ơi, '+msg;
+  const res=document.getElementById('result'); res.classList.add('show');
+  res.scrollIntoView({behavior:'smooth',block:'center'});
+  if(pct>=70){ burst(); playRight(); } 
+});
+
+// ---------- làm lại ----------
+document.getElementById('againBtn').addEventListener('click',function(){
+  for(let i=0;i<choices.length;i++) choices[i]=null;
+  submitted=false;
+  document.getElementById('submitBtn').disabled=false;
+  document.querySelectorAll('.q').forEach(c=>{ c.classList.remove('ok','no'); });
+  document.querySelectorAll('.opt').forEach(b=>{ b.disabled=false; b.classList.remove('right','wrong'); });
+  document.querySelectorAll('.fb').forEach(f=>{ f.innerHTML=''; });
+  document.getElementById('result').classList.remove('show');
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+updateProgress();
+</script>
+</body>
+</html>
